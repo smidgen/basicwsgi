@@ -33,3 +33,4 @@ def run(environ, urlvars, db_con):
 
 fo = open(os.path.dirname(__file__) + '/template.html', 'r')
 template = string.Template(fo.read())
+fo.close()

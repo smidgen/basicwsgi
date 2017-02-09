@@ -56,6 +56,7 @@ def application(environ, start_response):
         if not hasattr(template_cache, template):
             fo = open(os.path.dirname(__file__) + '/templates/' + template, 'r')
             template_cache[template] = string.Template(fo.read())
+            fo.close()
         output = template_cache[template].substitute(data)
 
     except Exception as e:
