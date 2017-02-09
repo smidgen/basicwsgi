@@ -5,8 +5,8 @@ def run(environ, urlvars):
     ret = {
         'status': '418 I\'m a teapot',
         'data': {
-            'title': "I'm a teapot",
-            'body': "<h1>I'm a teapot. I don't make coffee.</h1>",
+            'title': '418 I&#39;m a teapot',
+            'body': '<h1>I&#39;m a teapot. I don&#39;t make coffee.</h1>',
         },
     }
     return ret
