@@ -8,6 +8,8 @@ from config import *
 
 os.environ['PYTHON_EGG_CACHE'] = '/nolan4/srv/python/basicwsgi/.python-egg'
 
+template_cache = {}
+
 def application(environ, start_response):
     try:
         status = '200 OK'
@@ -51,9 +53,10 @@ def application(environ, start_response):
             template = ret.get('template', template)
             data.update(ret['data'])
 
-        fo = open(os.path.dirname(__file__) + '/templates/' + template, 'r')
-        t = string.Template(fo.read())
-        output = t.substitute(data)
+        if not hasattr(template_cache, template):
+            fo = open(os.path.dirname(__file__) + '/templates/' + template, 'r')
+            template_cache[template] = string.Template(fo.read())
+        output = template_cache[template].substitute(data)
 
     except Exception as e:
         status = '500 Internal Server Error'

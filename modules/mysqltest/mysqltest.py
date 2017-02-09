@@ -5,6 +5,8 @@ import os, string, MySQLdb
 REQUIRES_DB = True
 
 def run(environ, urlvars, db_con):
+    global template
+
     cursor = db_con.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT id, text FROM test')
     rows = cursor.fetchall()
@@ -19,9 +21,7 @@ def run(environ, urlvars, db_con):
     for row in rows:
         htmlvars['rows'] += '<tr><td>{id}</td><td>{text}</td></tr>\n'.format_map(row)
 
-    fo = open(os.path.dirname(__file__) + '/template.html', 'r')
-    t = string.Template(fo.read())
-    body = t.substitute(htmlvars)
+    body = template.substitute(htmlvars)
 
     ret = {
         'data': {
@@ -30,3 +30,6 @@ def run(environ, urlvars, db_con):
         },
     }
     return ret
+
+fo = open(os.path.dirname(__file__) + '/template.html', 'r')
+template = string.Template(fo.read())

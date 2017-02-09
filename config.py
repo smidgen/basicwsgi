@@ -9,7 +9,6 @@ modules_allowed = {
     'cgi':       IS_DEV_SERVER,
     'coffee':    True,
     'mysqltest': True,
-    'upload':    True,
 }
 
 mysql_config = {
