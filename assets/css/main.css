@@ -1,10 +1,10 @@
-table.env_dump {
+table.table {
     border-collapse: collapse;
 }
-table.env_dump th, table.env_dump td {
+table.table th, table.table td {
     border: 1px solid darkgray;
     padding: 3px;
 }
-table.env_dump th {
+table.table th {
     text-align: left;
 }

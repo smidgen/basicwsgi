@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
-import os, sys, traceback, importlib, string
+import os, sys, traceback, importlib, string, MySQLdb
 
-sys.path.append('/nolan4/srv/python/fileshare')
+sys.path.append('/nolan4/srv/python/basicwsgi')
 
 from config import *
 
-os.environ['PYTHON_EGG_CACHE'] = '/nolan4/srv/python/fileshare/.python-egg'
+os.environ['PYTHON_EGG_CACHE'] = '/nolan4/srv/python/basicwsgi/.python-egg'
 
 def application(environ, start_response):
     try:
@@ -15,7 +15,7 @@ def application(environ, start_response):
         template = 'main.html'
         data = {
             'title': '',
-            'base_href': 'http://localhost/fileshare/',
+            'base_href': 'http://localhost/basicwsgi/',
             'add_to_head': '',
             'body': '',
             'add_to_foot': '',
@@ -41,7 +41,11 @@ def application(environ, start_response):
                 module = importlib.import_module(modname)
             else:
                 module = sys.modules[modname]
-            ret = module.run(environ=environ, urlvars=path[3:])
+            if getattr(module, 'REQUIRES_DB', False):
+                db_con = MySQLdb.connect(mysql_config['host'], mysql_config['user'], mysql_config['password'], mysql_config['db'])
+                ret = module.run(environ=environ, urlvars=path[3:], db_con=db_con)
+            else:
+                ret = module.run(environ=environ, urlvars=path[3:])
             status = ret.get('status', status)
             content_type = ret.get('content_type', content_type)
             template = ret.get('template', template)
@@ -59,6 +63,8 @@ def application(environ, start_response):
         for line in traceback.format_exception(exc_type, exc_obj, exc_traceback):
             output += line + '\n'
     finally:
+        if 'db_con' in locals(): db_con.close()
+
         response_headers = [('Content-type', content_type),
                             ('Content-Length', str(len(output)))]
         start_response(status, response_headers)
