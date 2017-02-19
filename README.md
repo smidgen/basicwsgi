@@ -36,4 +36,8 @@ Setup instructions for Apache.
 
 5. Set up a MySQL user and database, grant privileges for that database, create the test table, and insert some data. The simplest way to go about this is to update the password in <code>install/dbsetup.sql</code> and run it.
 
-6. Browse to [http://localhost/basicwsgi/](http://localhost/basicwsgi/), or whatever your url is based on your configuration.
+6. Update the MySQL configuration in <code>config.py</code>.
+
+7. Update the paths and base URL in <code>application.wsgi</code>.
+
+8. Browse to [http://localhost/basicwsgi/](http://localhost/basicwsgi/), or whatever your url is based on your configuration.
