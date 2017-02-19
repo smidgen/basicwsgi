@@ -2,11 +2,11 @@
 
 import os, sys, traceback, importlib, string, MySQLdb
 
-sys.path.append('/nolan4/srv/python/basicwsgi')
+sys.path.append('/srv/basicwsgi')
 
 from config import *
 
-os.environ['PYTHON_EGG_CACHE'] = '/nolan4/srv/python/basicwsgi/.python-egg'
+os.environ['PYTHON_EGG_CACHE'] = '/srv/basicwsgi/.python-egg'
 
 template_cache = {}
 
