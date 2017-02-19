@@ -14,6 +14,6 @@ modules_allowed = {
 mysql_config = {
     'host':     'localhost',
     'user':     'test',
-    'password': 'mysqltest',
+    'password': 'change_me',
     'db':       'test'
 }
