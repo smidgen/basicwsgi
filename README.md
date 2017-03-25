@@ -71,6 +71,7 @@ The following instructions have been tested on CentOS 7, starting with the minim
 
 5. To start Apache without rebooting the server
 
+        sudo systemctl enable httpd
         sudo systemctl start httpd
 
 6. To open the firewall port (very important!)
@@ -125,13 +126,15 @@ The following instructions have been tested on CentOS 7, starting with the minim
                 Require all granted
         </Directory>
 
-13. Reload Apache configuration files to get it going:
+13. On a developement server, you may wish to change the loglevel in <code>/etc/httpd/conf/httpd.conf</code> to <code>info</code> in order to get more detailed information (such as WSGI process restarts) in <code>/etc/httpd/logs/error_log</code>
+
+14. Reload Apache configuration files to get it going:
 
         sudo systemctl reload httpd
-14. Get SELinux to stop raining on your parade:
+15. Get SELinux to stop raining on your parade:
 
         chcon -R -t httpd_sys_content_t /srv/basicwsgi
-15. Set up a MySQL user and database, grant privileges for that database, create the test table, and insert some data. The simplest way to go about this is to update the password in install/dbsetup.sql and run it.
+16. Set up a MySQL user and database, grant privileges for that database, create the test table, and insert some data. The simplest way to go about this is to update the password in install/dbsetup.sql and run it.
 
         sudo nano /srv/basicwsgi/install/dbsetup.sql
         mysql -uroot
@@ -139,16 +142,19 @@ The following instructions have been tested on CentOS 7, starting with the minim
     Then in the MariaDB command line:
         source /srv/basicwsgi/install/dbsetup.sql
         quit;
-
-16. Change the MySQL password in <code>/srv/basicwsgi/config.py</code>.
+17. Change the MySQL password in <code>/srv/basicwsgi/config.py</code>.
 
         sudo nano /srv/basicwsgi/config.py
+18. Browse to [http://localhost/basicwsgi/](http://localhost/basicwsgi/), or whatever your url is based on your configuration.
 
-17. Whenever you make a code change to the WSGI application (like the one we just did), you'll need to update the last modified date on <code>application.wsgi</code>.
+## Development Tips
+* Remember that whenever you make a code change to the WSGI application, you'll need to update the last modified date on <code>application.wsgi</code>.
 
         touch /srv/basicwsgi/application.wsgi
+* During development, you pretty much have to keep a terminal window open with <code>tail -f</code> monitoring the Apache error log in order to see parse errors and things that can cause the error system to fail.
 
-18. Browse to [http://localhost/basicwsgi/](http://localhost/basicwsgi/), or whatever your url is based on your configuration.
+        sudo tail -f /etc/httpd/logs/error_log
+    * Due to this, if you have a server on which multiple WSGI applications are running, it may be wise to create a separate Apache log file for each one, so you don't have error messages from all the applications mixed together.
 
 #### Resources
 The installation instructions for Python3 on CentOS were modified from the following article, which also explains some of the how's and why's, takes you through creating a virtualenv, and helps you create a basic Python (not WSGI) hello world.
