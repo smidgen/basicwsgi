@@ -4,7 +4,10 @@ A basic, framework-less Python WSGI web application, with sample Environment dum
 This is a Python 3 app.
 
 ## Setup
-Setup instructions for Apache.
+How to get Python3 + WSGI + Apache HTTPD running on Linux.
+
+### Ubuntu-based distros
+The following instructions should work for any Ubuntu-based Linux distro. It has been tested on Linux Mint.
 
 1. Install Apache, WSGI, and Python-MySQLdb. The following command works for distros using Ubuntu repositories.
 
@@ -40,4 +43,113 @@ Setup instructions for Apache.
 
 7. Update the paths and base URL in <code>application.wsgi</code>.
 
-8. Browse to [http://localhost/basicwsgi/](http://localhost/basicwsgi/), or whatever your url is based on your configuration.
+8. Open the appropriate firewall port (usually TCP port 80) if necessary.
+
+9. Browse to [http://localhost/basicwsgi/](http://localhost/basicwsgi/), or whatever your url is based on your configuration.
+
+### CentOS
+The following instructions have been tested on CentOS 7, starting with the minimal ISO install.
+
+1. Some extremely useful tools that every command-line guru knows (substitute nano with your favorite text editor):
+
+        sudo yum install nano net-tools screen
+
+2. Dependencies for code compilation:
+
+        sudo yum -y groupinstall development
+2. Add repo:
+
+        sudo yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+3. Search for the latest available version of Python to use in the next command:
+
+        sudo yum search python3
+4. Install mod_wsgi and its dependencies, including Python3 and Apache
+    (be sure to use the above yum search command to check if
+    python36u-mod_wsgi is still the latest version)
+
+        sudo yum -y install python36u-mod_wsgi
+
+5. To start Apache without rebooting the server
+
+        sudo systemctl start httpd
+
+6. To open the firewall port (very important!)
+
+        sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
+        sudo firewall-cmd --reload
+
+7. So you can use /usr/bin/python3 in the shebang line
+
+    sudo ln -s /usr/bin/python3.6 /usr/bin/python3
+
+8. Install Python3 MySQLdb driver.
+    Again, do a yum search to get the latest available version of Python3.
+
+        sudo yum -y install python36u-pip python36u-devel
+        sudo yum -y install mariadb mariadb-server mariadb-devel
+        sudo pip3.6 install mysqlclient
+9. Start MariaDB/MySQL.
+
+        sudo systemctl enable mariadb
+        sudo systemctl start mariadb
+10. Check out the project (modify the path and username in the following commands to suit).
+
+        cd /srv
+        sudo mkdir basicwsgi && sudo chown nolan:nolan basicwsgi
+        git clone https://github.com/smidgen/basicwsgi.git basicwsgi
+
+11. Edit <code>application.wsgi</code> and update the appropriate paths and URL. Be sure to change it from localhost to whatever hostname you're using.
+
+        sudo nano application.wsgi
+
+12. Create a Apache configuration file in <code>/etc/httpd/conf.d/</code>.
+
+        sudo nano /etc/httpd/conf.d/basicwsgi.conf
+    Fill it with the following:
+
+        WSGIDaemonProcess basicwsgi processes=2 threads=5
+        WSGIProcessGroup basicwsgi
+
+        WSGIScriptAlias /basicwsgi /srv/basicwsgi/application.wsgi
+
+        <Directory /srv/basicwsgi>
+                Options None
+                AllowOverride None
+                Require all granted
+        </Directory>
+
+        Alias "/basicwsgi/assets/" /srv/basicwsgi/assets/
+        <Directory /srv/basicwsgi/assets>
+                Options None
+                AllowOverride None
+                Require all granted
+        </Directory>
+
+13. Reload Apache configuration files to get it going:
+
+        sudo systemctl reload httpd
+14. Get SELinux to stop raining on your parade:
+
+        chcon -R -t httpd_sys_content_t /srv/basicwsgi
+15. Set up a MySQL user and database, grant privileges for that database, create the test table, and insert some data. The simplest way to go about this is to update the password in install/dbsetup.sql and run it.
+
+        sudo nano /srv/basicwsgi/install/dbsetup.sql
+        mysql -uroot
+
+    Then in the MariaDB command line:
+        source /srv/basicwsgi/install/dbsetup.sql
+        quit;
+
+16. Change the MySQL password in <code>/srv/basicwsgi/config.py</code>.
+
+        sudo nano /srv/basicwsgi/config.py
+
+17. Whenever you make a code change to the WSGI application (like the one we just did), you'll need to update the last modified date on <code>application.wsgi</code>.
+
+        touch /srv/basicwsgi/application.wsgi
+
+18. Browse to [http://localhost/basicwsgi/](http://localhost/basicwsgi/), or whatever your url is based on your configuration.
+
+#### Resources
+The installation instructions for Python3 on CentOS were modified from the following article, which also explains some of the how's and why's, takes you through creating a virtualenv, and helps you create a basic Python (not WSGI) hello world.
+[https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-local-programming-environment-on-centos-7](https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-local-programming-environment-on-centos-7)
