@@ -153,6 +153,11 @@ The following instructions have been tested on CentOS 7, starting with the minim
         touch /srv/basicwsgi/application.wsgi
 * During development, you pretty much have to keep a terminal window open with <code>tail -f</code> monitoring the Apache error log in order to see parse errors and things that can cause the error system to fail.
 
+    For Debian/Ubuntu-based systems:
+
+        sudo tail -f /var/log/apache2/error.log
+    For CentOS:
+
         sudo tail -f /etc/httpd/logs/error_log
     * Due to this, if you have a server on which multiple WSGI applications are running, it may be wise to create a separate Apache log file for each one, so you don't have error messages from all the applications mixed together.
 
