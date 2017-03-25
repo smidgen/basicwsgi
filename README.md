@@ -81,7 +81,7 @@ The following instructions have been tested on CentOS 7, starting with the minim
 
 7. So you can use /usr/bin/python3 in the shebang line
 
-    sudo ln -s /usr/bin/python3.6 /usr/bin/python3
+        sudo ln -s /usr/bin/python3.6 /usr/bin/python3
 
 8. Install Python3 MySQLdb driver.
     Again, do a yum search to get the latest available version of Python3.
