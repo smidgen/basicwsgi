@@ -18,23 +18,23 @@ The following instructions should work for any Ubuntu-based Linux distro. It has
 3. Edit the Apache vhost configuration file, for example, <code>/etc/apache2/sites-enabled/000-default.conf</code> or <code>/etc/apache2/sites-enabled/default-ssl.conf</code>. Add the following lines:
 
 ```ApacheConf
-        WSGIDaemonProcess basicwsgi processes=2 threads=5
-        WSGIProcessGroup basicwsgi
+WSGIDaemonProcess basicwsgi processes=2 threads=5
+WSGIProcessGroup basicwsgi
 
-        WSGIScriptAlias /basicwsgi /srv/basicwsgi/application.wsgi
+WSGIScriptAlias /basicwsgi /srv/basicwsgi/application.wsgi
 
-        <Directory /srv/basicwsgi>
-                Options None
-                AllowOverride None
-                Require all granted
-        </Directory>
+<Directory /srv/basicwsgi>
+        Options None
+        AllowOverride None
+        Require all granted
+</Directory>
 
-        Alias "/basicwsgi/assets/" /srv/basicwsgi/assets/
-        <Directory /srv/basicwsgi/assets>
-                Options None
-                AllowOverride None
-                Require all granted
-        </Directory>
+Alias "/basicwsgi/assets/" /srv/basicwsgi/assets/
+<Directory /srv/basicwsgi/assets>
+        Options None
+        AllowOverride None
+        Require all granted
+</Directory>
 ```
 
 4. On a developement server, you may wish to change the loglevel to <code>info</code> in order to get more detailed information (such as WSGI process restarts) in <code>/var/log/apache2/error.log</code>.
@@ -111,23 +111,23 @@ The following instructions have been tested on CentOS 7, starting with the minim
     Fill it with the following:
 
 ```ApacheConf
-        WSGIDaemonProcess basicwsgi processes=2 threads=5
-        WSGIProcessGroup basicwsgi
+WSGIDaemonProcess basicwsgi processes=2 threads=5
+WSGIProcessGroup basicwsgi
 
-        WSGIScriptAlias /basicwsgi /srv/basicwsgi/application.wsgi
+WSGIScriptAlias /basicwsgi /srv/basicwsgi/application.wsgi
 
-        <Directory /srv/basicwsgi>
-                Options None
-                AllowOverride None
-                Require all granted
-        </Directory>
+<Directory /srv/basicwsgi>
+        Options None
+        AllowOverride None
+        Require all granted
+</Directory>
 
-        Alias "/basicwsgi/assets/" /srv/basicwsgi/assets/
-        <Directory /srv/basicwsgi/assets>
-                Options None
-                AllowOverride None
-                Require all granted
-        </Directory>
+Alias "/basicwsgi/assets/" /srv/basicwsgi/assets/
+<Directory /srv/basicwsgi/assets>
+        Options None
+        AllowOverride None
+        Require all granted
+</Directory>
 ```
 
 13. On a developement server, you may wish to change the loglevel in <code>/etc/httpd/conf/httpd.conf</code> to <code>info</code> in order to get more detailed information (such as WSGI process restarts) in <code>/etc/httpd/logs/error_log</code>
