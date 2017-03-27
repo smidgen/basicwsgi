@@ -140,6 +140,7 @@ The following instructions have been tested on CentOS 7, starting with the minim
         mysql -uroot
 
     Then in the MariaDB command line:
+
         source /srv/basicwsgi/install/dbsetup.sql
         quit;
 17. Change the MySQL password in <code>/srv/basicwsgi/config.py</code>.
